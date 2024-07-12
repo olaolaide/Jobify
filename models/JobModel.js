@@ -1,33 +1,29 @@
 import mongoose from 'mongoose';
-
+import { JOB_STATUS, JOB_TYPE } from '../utils/constants.js';
 const JobSchema = new mongoose.Schema(
   {
-    company: {
+    company: String,
+    position: String,
+    jobStatus: {
       type: String,
-      required: true,
+      enum: Object.values(JOB_STATUS),
+      default: JOB_STATUS.PENDING,
     },
-    position: {
+    jobType: {
       type: String,
-      required: true,
+      enum: Object.values(JOB_TYPE),
+      default: JOB_TYPE.FULL_TIME,
     },
     jobLocation: {
       type: String,
       default: 'my city',
     },
-    jobStatus: {
-      type: String,
-      enum: ['pending', 'interview', 'declined'],
-      default: 'pending',
-    },
-    jobType: {
-      type: String, // Changed to String to match enum values
-      enum: ['full-time', 'part-time', 'internship'],
-      default: 'full-time',
+    createdBy: {
+      type: mongoose.Types.ObjectId,
+      ref: 'User',
     },
   },
-  {
-    timestamps: true, // Automatically manages createdAt and updatedAt fields
-  }
+  { timestamps: true }
 );
 
 export default mongoose.model('Job', JobSchema);
